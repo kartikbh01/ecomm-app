@@ -22,15 +22,18 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export function EcommerceSidebar() {
-  const [categories, setCategories] = useState([
-    "Beauty",
-    "Furniture",
-    "Grocery",
-    "Smartphone",
-  ]);
-
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const [categories, setCategories] = useState([]);
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch(`https://dummyjson.com/products/categories`);
+      const data = await response.json();
+      setCategories(data);
+    };
+    fetchCategories();
+  }, []);
 
   const getArrayParam = (param) => searchParams.get(param)?.split(",") || [];
   const getPriceParam = () => {
@@ -76,7 +79,6 @@ export function EcommerceSidebar() {
 
   const clearAllFilters = () => {
     setSelectedCategories([]);
-    setSelectedBrands([]);
     setPriceRange([0, 15999]);
     updateURLParams({ categories: [], brands: [], min: null, max: null });
   };
@@ -98,10 +100,10 @@ export function EcommerceSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="p-4">
+      <SidebarContent className="p-2">
         {/* Price Range Filter */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sm font-medium mb-3">
+          <SidebarGroupLabel className="text-sm font-medium mb-2">
             Price Range
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -116,32 +118,36 @@ export function EcommerceSidebar() {
                 <span>${priceRange[1]}</span>
               </div>
             </div>
+            
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <Separator className="my-6" />
+        <Separator />
 
         {/* Categories Filter */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sm font-medium mb-3">
+          <SidebarGroupLabel className="text-sm font-medium mb-2">
             Categories
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <div className="space-y-3">
+            <div className="">
               {categories.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
+                <div
+                  key={category.slug}
+                  className="flex items-center space-x-2 space-y-2"
+                >
                   <Checkbox
                     id={category.slug}
-                    checked={selectedCategories.includes(category)}
+                    checked={selectedCategories.includes(category.slug)}
                     onCheckedChange={(checked) =>
-                      handleCategoryChange(category, checked)
+                      handleCategoryChange(category.slug, checked)
                     }
                   />
                   <Label
                     htmlFor={category.slug}
                     className="text-sm font-normal cursor-pointer flex-1"
                   >
-                    {category}
+                    {category.name}
                   </Label>
                 </div>
               ))}
