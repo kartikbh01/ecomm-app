@@ -23,58 +23,74 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export function EcommerceSidebar() {
   const router = useRouter();
+
+  // useSearchParams: A client component hook that lets you read the current URL's query string
   const searchParams = useSearchParams();
 
   const [categories, setCategories] = useState([]);
+
+  // fetch all the available categories
   React.useEffect(() => {
     const fetchCategories = async () => {
       const response = await fetch(`https://dummyjson.com/products/categories`);
       const data = await response.json();
+      // console.log(data)
       setCategories(data);
     };
     fetchCategories();
   }, []);
 
-  const getArrayParam = (param) => searchParams.get(param)?.split(",") || [];
+  const getArrayParam = (param) => searchParams.get(param)?.split(",") || []; // categores: "beauty,sports,watches" -> ["beuty", "sports", "watches"]
+
   const getPriceParam = () => {
-    const min = parseInt(searchParams.get("min") || "0", 10);
-    const max = parseInt(searchParams.get("max") || "15999", 10);
+    const min = parseInt(searchParams.get("min") || "0"); // get "min" value from query string
+    const max = parseInt(searchParams.get("max") || "15999"); // get "max" value from query string
     return [min, max];
   };
 
   const [selectedCategories, setSelectedCategories] = React.useState(
     getArrayParam("categories")
-  );
+  ); // selected categories in an array
+
   const [priceRange, setPriceRange] = React.useState(getPriceParam());
 
+  // update the URL based on filters applied
   const updateURLParams = (params) => {
     const updated = new URLSearchParams(searchParams.toString());
 
+    // console.log("updated categories",updated)
+
     Object.entries(params).forEach(([key, value]) => {
+      console.log("URL update:", { key, value });
+
       if (!value || (Array.isArray(value) && value.length === 0)) {
         updated.delete(key);
       } else if (Array.isArray(value)) {
-        updated.set(key, value.join(","));
+        updated.set(key, value.join(",")); // ["cat1", "cat2", "cat3"] -> "cat1,cat2,cat3"
       } else {
         updated.set(key, value.toString());
       }
     });
 
+    console.log("Updated URL query", updated.toString()); //example: categories=home-decoration%2Cmobile-accessories&max=10690
     router.push(`?${updated.toString()}`);
   };
 
+  // add or remove selected categories
   const handleCategoryChange = (categoryId, checked) => {
     const updated = checked
       ? [...selectedCategories, categoryId]
       : selectedCategories.filter((id) => id !== categoryId);
 
-    setSelectedCategories(updated);
-    updateURLParams({ categories: updated });
+    setSelectedCategories(updated); // update selectedCategories list
+    updateURLParams({ categories: updated }); // update the URL accordingly
   };
 
   const handlePriceRangeChange = (range) => {
-    setPriceRange(range);
-    updateURLParams({ min: range[0], max: range[1] });
+    if (range[0] < range[1]) {
+      setPriceRange(range);
+      updateURLParams({ min: range[0], max: range[1] });
+    }
   };
 
   const clearAllFilters = () => {
@@ -118,7 +134,6 @@ export function EcommerceSidebar() {
                 <span>${priceRange[1]}</span>
               </div>
             </div>
-            
           </SidebarGroupContent>
         </SidebarGroup>
 

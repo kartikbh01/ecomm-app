@@ -9,13 +9,19 @@ import { useDebouncedCallback } from "use-debounce";
 export default function Navbar() {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
+
+  // debouncing
   const handleChange = useDebouncedCallback((term) => {
+
+    // URLSearchParams -> A JS API to handle url search parameters
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set("q", term);
     } else {
       params.delete("q");
     }
+
+    console.log("search params",params.toString())
     replace(`${"/"}?${params.toString()}`);
   }, 1000);
 
@@ -32,7 +38,7 @@ export default function Navbar() {
               </span>
             </div>
             <span className="font-bold text-xl hidden sm:inline-block">
-              EcomStore
+              EcommStore
             </span>
           </div>
         </div>

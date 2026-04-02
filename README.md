@@ -1,36 +1,191 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🛒 EcommStore – Next.js Ecommerce App
 
-## Getting Started
+An Ecommerce web application built using **Next.js (App Router)** and the public API:  
+https://dummyjson.com/products/
 
-First, run the development server:
+This project demonstrates real-world frontend patterns such as **URL-based state management, server-side data fetching, filtering, and search** using modern **React** and **Next.js** practices.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+![alt text](/public/image.png)
+---
+
+## 🚀 Features
+
+### 🔍 Search Functionality
+
+- Users can search products using a search bar in the navbar.
+- Search queries are stored in the URL (`?q=phone`), enabling:
+  - Shareable links
+  - Browser navigation (back/forward)
+  - Persistent state
+
+![alt text](/public/image-1.png)
+---
+
+### 🧩 Sidebar Filters
+
+- Dynamic filters for:
+  - 📂 Categories
+  - 💰 Price range (min & max)
+- Filters are synced with the URL:
+  - Example:  
+    `?categories=smartphones,laptops&min=100&max=2000`
+
+![alt text](/public/image-2.png)
+
+---
+
+### 🔗 URL State Management
+
+- Fully controlled using:
+  - [useSearchParams()](https://nextjs.org/docs/app/api-reference/functions/use-search-params)
+  - [useRouter()](https://nextjs.org/docs/app/api-reference/functions/use-router)
+  - [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)
+- Enables:
+  - Deep linking
+  - State persistence across reloads
+  - Clean and predictable UI state
+
+---
+
+### ⚡ Debounced Search
+
+- Implemented using `use-debounce`
+- Prevents excessive API calls while typing
+- Improves performance and UX
+
+---
+
+### 🖥️ Server-Side Data Fetching
+
+- Products are fetched in a **Server Component (`page.js`)**
+- Ensures:
+  - Faster initial load
+  - SEO benefits
+  - Better performance
+
+---
+
+### 🎨 UI & Design
+
+- Built using **[ShadcnUI](https://ui.shadcn.com/) components**
+- Responsive layout:
+  - Grid-based product display
+  - Mobile-friendly sidebar
+- Clean and modern design
+
+---
+
+## 🧠 How It Works
+
+### 📌 Search Flow
+
+1. User types in the search bar
+2. Input is debounced
+3. URL is updated with `q` parameter
+4. Server component re-fetches data based on query
+
+---
+
+### 📌 Filtering Flow
+
+1. User selects categories or price range
+2. Sidebar updates URL parameters
+3. Server component reads:
+   - `categories`
+   - `min`
+   - `max`
+4. Products are filtered accordingly
+
+---
+
+### 📌 URL Example
+
+```
+/?q=phone&categories=smartphones,laptops&min=500&max=2000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 📦 API Endpoints Used
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **All Products**
 
-## Learn More
+  ```
+  https://dummyjson.com/products
+  ```
 
-To learn more about Next.js, take a look at the following resources:
+- **Search Products**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  ```
+  https://dummyjson.com/products/search?q=phone
+  ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Categories**
+  ```
+  https://dummyjson.com/products/categories
+  ```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧱 Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework:** Next.js (App Router)
+- **Language:** JavaScript
+- **UI Library:** [ShadcnUI](https://ui.shadcn.com/)
+- **Icons:** Lucide React
+- **State Management:** URL-based (no global state)
+- **Utilities:** [use-debounce](https://www.npmjs.com/package/use-debounce)
+
+---
+
+## 📂 Key Components
+
+### 🔝 Navbar
+
+- Search input with debouncing
+- Updates URL query params dynamically
+
+---
+
+### 📚 Sidebar
+
+- Fetches categories dynamically
+- Handles:
+  - Multi-select categories
+  - Price range slider
+- Updates URL on every interaction
+
+---
+
+### 🏠 Home Page (`page.js`)
+
+- Server component
+- Reads `searchParams`
+- Fetches & filters products:
+  - By search query
+  - By category
+  - By price range
+
+---
+
+## 🧪 Learnings & Concepts Covered
+
+- URL-driven state management
+- Server vs Client components in Next.js
+- Debouncing in React
+- Dynamic filtering logic
+- Clean separation of concerns
+- Building scalable UI with [ShadcnUI](https://ui.shadcn.com/)
+
+---
+
+## 🏁 Getting Started
+
+```bash
+git clone <your-repo-url>
+cd ecommerce-app
+npm install
+npm run dev
+```
+
+---
