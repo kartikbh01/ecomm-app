@@ -13,6 +13,7 @@ export function ProductCard({ product }) {
     price,
     discountPercentage,
     brand,
+    rating,
   } = product;
 
   const hasDiscount = discountPercentage > 0;
@@ -39,14 +40,38 @@ export function ProductCard({ product }) {
           <div className="flex justify-between items-start gap-2">
             <div className="flex-1">
               {/* Title */}
-                <h3 className="font-medium text-sm line-clamp-2">{title}</h3>
+              <h3 className="font-medium text-sm line-clamp-2">{title}</h3>
 
               {/* Brand */}
-              <span className="text-gray-500 text-sm">{brand || "non branded"}</span>
+              <span className="text-gray-500 text-sm">
+                {brand || "non branded"}
+              </span>
+
+              {/* Rating */}
+              <div className="mt-1 flex items-center gap-1 text-xs">
+                {Array.from({ length: 5 }).map((_, index) => {
+                  const value = typeof rating === "number" ? rating : 0;
+                  const isFilled = index < Math.round(value);
+
+                  return (
+                    <Star
+                      key={index}
+                      className={`h-3 w-3 ${
+                        isFilled
+                          ? "text-yellow-400 fill-yellow-400"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  );
+                })}
+                <span className="ml-1 text-[10px] text-gray-500">
+                  {typeof rating === "number" ? rating.toFixed(1) : "0.0"}
+                </span>
+              </div>
             </div>
-            
+
             {/* Price */}
-            <div className="leading-tight">
+            <div className="leading-tight text-right">
               <span className="text-base font-semibold text-green-800">
                 ${price.toFixed(2)}
               </span>

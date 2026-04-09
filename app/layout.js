@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Suspense } from "react";
 import { EcommerceLayout } from "./components/ecommerce-layout";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -27,9 +26,9 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <TooltipProvider>
-          <Suspense>
-            <EcommerceLayout>{children}</EcommerceLayout>
-          </Suspense>
+          <EcommerceLayout>
+            {children}
+          </EcommerceLayout>
         </TooltipProvider>
       </body>
     </html>

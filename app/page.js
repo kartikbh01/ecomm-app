@@ -6,7 +6,9 @@ export default async function HomePage({ searchParams }) {
     categories = "",
     min = 0,
     max = 15999,
-  } = await searchParams || {};
+    sortBy = "title",
+    order = "asc",
+  } = (await searchParams) || {};
 
   console.log(categories)
 
@@ -14,7 +16,7 @@ export default async function HomePage({ searchParams }) {
   const categoryList = categories ? categories.split(",") : [];
 
   const products = await fetch(
-    `https://dummyjson.com/products/search?${q ? `q=${q}` : ""}&sortBy=title&limit=1600&select=title,price,thumbnail,category,brand`,
+    `https://dummyjson.com/products/search?${q ? `q=${q}` : ""}&sortBy=${sortBy}&order=${order}&limit=160&select=title,price,thumbnail,category,brand,rating`,
   )
     .then(res => res.json())
     .then(data => {

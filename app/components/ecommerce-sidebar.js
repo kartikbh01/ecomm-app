@@ -54,6 +54,12 @@ export function EcommerceSidebar() {
 
   const [priceRange, setPriceRange] = React.useState(getPriceParam());
 
+  const [sortBy, setSortBy] = React.useState(
+    searchParams.get("sortBy") || ""
+  );
+
+  const [order, setOrder] = React.useState(searchParams.get("order") || "");
+
   // update the URL based on filters applied
   const updateURLParams = (params) => {
     const updated = new URLSearchParams(searchParams.toString());
@@ -96,7 +102,22 @@ export function EcommerceSidebar() {
   const clearAllFilters = () => {
     setSelectedCategories([]);
     setPriceRange([0, 15999]);
-    updateURLParams({ categories: [], brands: [], min: null, max: null });
+    setSortBy("");
+    setOrder("");
+    updateURLParams({
+      categories: [],
+      brands: [],
+      min: null,
+      max: null,
+      sortBy: null,
+      order: null,
+    });
+  };
+
+  const handleSortChange = (nextSortBy, nextOrder) => {
+    setSortBy(nextSortBy);
+    setOrder(nextOrder);
+    updateURLParams({ sortBy: nextSortBy, order: nextOrder });
   };
 
   return (
@@ -133,6 +154,39 @@ export function EcommerceSidebar() {
                 <span>${priceRange[0]}</span>
                 <span>${priceRange[1]}</span>
               </div>
+            </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <Separator />
+
+        {/* Sort By Filter */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-sm font-medium mb-2">
+            Sort By
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <div className="flex flex-col gap-2 text-xs">
+              <Button
+                variant={
+                  sortBy === "price" && order === "asc" ? "default" : "outline"
+                }
+                size="sm"
+                className="justify-start"
+                onClick={() => handleSortChange("price", "asc")}
+              >
+                Price: Low to High
+              </Button>
+              <Button
+                variant={
+                  sortBy === "price" && order === "desc" ? "default" : "outline"
+                }
+                size="sm"
+                className="justify-start"
+                onClick={() => handleSortChange("price", "desc")}
+              >
+                Price: High to Low
+              </Button>
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
