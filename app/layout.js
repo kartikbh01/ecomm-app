@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { EcommerceLayout } from "./components/ecommerce-layout";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,9 +27,9 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <TooltipProvider>
-          <EcommerceLayout>
-            {children}
-          </EcommerceLayout>
+          <Suspense>
+            <EcommerceLayout>{children}</EcommerceLayout>
+          </Suspense>
         </TooltipProvider>
       </body>
     </html>
